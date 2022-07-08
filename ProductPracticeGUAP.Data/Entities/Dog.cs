@@ -10,4 +10,5 @@ public class Dog
     public string Breed { get; set; }
     public double Weight { get; set; }
     public Owner Owner { get; set; }
+    public bool IsDeleted { get; set; }
 }
