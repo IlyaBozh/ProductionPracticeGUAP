@@ -22,7 +22,7 @@ public class DogRepository : IDogRepository
 
     public List<Dog> GetAll() => _context.Dogs.Where(d => !d.IsDeleted).ToList();
 
-    public Dog? GetById(int id) => _context.Dogs.FirstOrDefault(d => d.Id == id);
+    public Dog? GetById(int id) => _context.Dogs.Where(d => !d.IsDeleted).FirstOrDefault(d => d.Id == id);
 
     public List<Dog>? GetByOwnerId(int id) => _context.Dogs.Where(d => d.Owner.Id == id && !d.IsDeleted).ToList();
 

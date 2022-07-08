@@ -24,7 +24,7 @@ public class OwnerRepository : IOwnerRepository
 
     public List<Owner> GetAll() => _context.Owners.Where(o => !o.IsDeleted).ToList();
 
-    public Owner? GetById(int id) => _context.Owners.FirstOrDefault(o => o.Id == id);
+    public Owner? GetById(int id) => _context.Owners.Where(o => !o.IsDeleted).FirstOrDefault(o => o.Id == id);
 
     public void RemoveById(int id)
     {

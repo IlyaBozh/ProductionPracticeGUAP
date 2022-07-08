@@ -44,7 +44,7 @@ public class OwnersController : Controller
     {
         _ownerRepository.RemoveById(id);
 
-        return NoContent();
+        return Ok();
     }
 
     [HttpPut("{id}")]
@@ -69,9 +69,12 @@ public class OwnersController : Controller
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public ActionResult<OwnerOutPutResponse> GetById(int id)
     {
-        var dogs = _ownerRepository.GetById(id);
+        var owner = _ownerRepository.GetById(id);
 
-        return Ok(dogs);
+        if (owner is not null)
+            return Ok(owner);
+        else
+            return NotFound();
     }
 
     [HttpGet]
@@ -80,8 +83,11 @@ public class OwnersController : Controller
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public ActionResult<List<OwnerOutPutAllResponse>> GetAll()
     {
-        var dogs = _ownerRepository.GetAll();
+        var owners = _ownerRepository.GetAll();
 
-        return Ok(dogs);
+        if (owners.Count != 0)
+            return Ok(owners);
+        else
+            return NotFound();
     }
 }

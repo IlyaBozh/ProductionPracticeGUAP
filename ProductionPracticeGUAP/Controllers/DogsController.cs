@@ -75,11 +75,14 @@ public class DogsController : Controller
     [ProducesResponseType(typeof(DogOutPutResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public ActionResult<List<DogOutPutResponse>> GetById(int id)
+    public ActionResult<DogOutPutResponse> GetById(int id)
     {
-        var dogs = _dogRepository.GetById(id);
+        var dog = _dogRepository.GetById(id);
 
-        return Ok(dogs);
+        if (dog is not null)
+            return Ok(dog);
+        else
+            return NotFound();
     }
 
     [HttpGet("{id}/owner")]
@@ -90,7 +93,10 @@ public class DogsController : Controller
     {
         var dogs = _dogRepository.GetByOwnerId(id);
 
-        return Ok(dogs);
+        if (dogs.Count != 0)
+            return Ok(dogs);
+        else
+            return NotFound();
     }
 
     [HttpGet]
@@ -101,6 +107,9 @@ public class DogsController : Controller
     {
         var dogs = _dogRepository.GetAll();
 
-        return Ok(dogs);
+        if (dogs.Count != 0)
+            return Ok(dogs);
+        else
+            return NotFound();
     }
 }
