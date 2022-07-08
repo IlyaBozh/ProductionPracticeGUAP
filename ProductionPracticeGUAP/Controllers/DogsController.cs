@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductionPracticeGUAP.API.Extentions;
 using ProductionPracticeGUAP.API.Models;
+using ProductPracticeGUAP.Data.Entities;
+using ProductPracticeGUAP.Data.Repositories.Interfaces;
 
 namespace ProductionPracticeGUAP.Controllers;
 
@@ -7,12 +10,34 @@ namespace ProductionPracticeGUAP.Controllers;
 [Route("[controller]")]
 public class DogsController : Controller
 {
+    private readonly IDogRepository _dogRepository;
+    private readonly IOwnerRepository _ownerRepository;
+
+    public DogsController(IDogRepository dogRepository, IOwnerRepository ownerRepository)
+    {
+        _dogRepository = dogRepository;
+        _ownerRepository = ownerRepository;
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
-    public ActionResult<int> Add ([FromBody]DogRequest dog)
+    public ActionResult<int> Add ([FromBody]DogRequest dogInfo, int ownerId)
     {
-        return 1;
+        var owner = _ownerRepository.GetById(ownerId);
+
+        Dog dog = new Dog
+        {
+            Name = dogInfo.Name,
+            Breed = dogInfo.Breed,
+            Weight = dogInfo.Weight,
+            Age = dogInfo.Age,
+            Owner = owner,
+            IsDeleted = false
+        };
+
+        var result = _dogRepository.Add(dog);
+        return Created($"{this.GetUri()}/{result}", result);
     }
 
     [HttpDelete("{id}")]
@@ -22,6 +47,8 @@ public class DogsController : Controller
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
     public ActionResult RemoveById(int id)
     {
+        _dogRepository.RemoveById(id);
+
         return NoContent();
     }
 
@@ -30,8 +57,17 @@ public class DogsController : Controller
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
-    public ActionResult UpdateById(DogRequest dog, int id)
+    public ActionResult UpdateById([FromBody] DogRequest dogInfo, int id)
     {
+        var dog = _dogRepository.GetById(id);
+
+        dog.Name = dogInfo.Name;
+        dog.Breed = dogInfo.Breed;
+        dog.Weight = dogInfo.Weight;
+        dog.Age = dogInfo.Age;
+
+        _dogRepository.UpdateById(dog, id);
+
         return NoContent();
     }
 
@@ -39,9 +75,22 @@ public class DogsController : Controller
     [ProducesResponseType(typeof(DogOutPutResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public ActionResult<DogOutPutResponse> GetByUserId(int id)
+    public ActionResult<List<DogOutPutResponse>> GetById(int id)
     {
-        return Ok(new DogOutPutResponse());
+        var dogs = _dogRepository.GetById(id);
+
+        return Ok(dogs);
+    }
+
+    [HttpGet("{id}/owner")]
+    [ProducesResponseType(typeof(DogOutPutAllResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
+    public ActionResult<List<DogOutPutAllResponse>> GetByOwnerId(int id)
+    {
+        var dogs = _dogRepository.GetByOwnerId(id);
+
+        return Ok(dogs);
     }
 
     [HttpGet]
@@ -50,6 +99,8 @@ public class DogsController : Controller
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
     public ActionResult<List<DogOutPutAllResponse>> GetAll()
     {
-        return NoContent();
+        var dogs = _dogRepository.GetAll();
+
+        return Ok(dogs);
     }
 }

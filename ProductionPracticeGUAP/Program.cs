@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProductionPracticeGUAP.API.Infrastructure;
 using ProductPracticeGUAP.Data;
+using ProductPracticeGUAP.Data.Repositories;
+using ProductPracticeGUAP.Data.Repositories.Interfaces;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -82,6 +84,9 @@ builder.Services.AddDbContext<ProductPracticeGUAPContext>(o =>
 {
     o.UseNpgsql("Host=localhost;Port=5432;Database=ProductionPracticeGUAP;Username=postgres;Password=1234");
 });
+
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+builder.Services.AddScoped<IDogRepository, DogRepository>();
 
 var app = builder.Build();
 
