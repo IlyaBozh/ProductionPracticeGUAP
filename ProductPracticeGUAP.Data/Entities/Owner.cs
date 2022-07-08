@@ -9,4 +9,5 @@ public class Owner
     public string LastName { get; set; }
     public string Email { get; set; }
     public List<Dog> Dogs { get; set; }
+    public bool IsDeleted { get; set; }
 }
