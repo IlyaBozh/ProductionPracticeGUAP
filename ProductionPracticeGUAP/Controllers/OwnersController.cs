@@ -10,7 +10,7 @@ public class OwnersController : Controller
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
-    public ActionResult<int> AddOwner(OwnerRequest dog)
+    public ActionResult<int> Add(OwnerRequest dog)
     {
         return 1;
     }
@@ -20,7 +20,7 @@ public class OwnersController : Controller
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
-    public ActionResult RemoveOwnerById(int id)
+    public ActionResult RemoveById(int id)
     {
         return NoContent();
     }
@@ -30,7 +30,7 @@ public class OwnersController : Controller
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
-    public ActionResult UpdateOwnerById(OwnerRequest dog, int id)
+    public ActionResult UpdateById(OwnerRequest dog, int id)
     {
         return NoContent();
     }
@@ -39,17 +39,17 @@ public class OwnersController : Controller
     [ProducesResponseType(typeof(OwnerOutPutResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public ActionResult GetOwnerByUserId(int id)
+    public ActionResult<DogOutPutResponse> GetByOwnerId(int id)
     {
-        return NoContent();
+        return Ok(new DogOutPutResponse());
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(List<OwnerOutPutAllResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-    public ActionResult GetAllOwners()
+    public ActionResult<List<DogOutPutAllResponse>> GetAll()
     {
-        return NoContent();
+        return Ok(new DogOutPutAllResponse());
     }
 }
