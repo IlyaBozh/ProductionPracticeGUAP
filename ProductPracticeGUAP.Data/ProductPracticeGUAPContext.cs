@@ -24,11 +24,5 @@ public class ProductPracticeGUAPContext : DbContext
                 .HasOne(od => od.Owner)
                 .WithMany(o => o.Dogs);
         });
-
-/*        modelBuilder.Entity<Owner>(entity =>
-        {
-            entity.ToTable(nameof(Owner));
-            entity.HasKey(e => e.Id);
-        });*/
     }
 }

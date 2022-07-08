@@ -1,38 +1,44 @@
 ﻿using ProductPracticeGUAP.Data.Entities;
 using ProductPracticeGUAP.Data.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ProductPracticeGUAP.Data.Repositories
+namespace ProductPracticeGUAP.Data.Repositories;
+
+public class DogRepository : IDogRepository
 {
-    public class DogRepository : IDogRepository
+    private readonly ProductPracticeGUAPContext _context;
+
+    public DogRepository(ProductPracticeGUAPContext context)
     {
-        public int Add(Dog dog)
-        {
-            throw new NotImplementedException();
-        }
+        _context = context;
+    }
 
-        public List<Dog> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+    public int Add(Dog dog)
+    {
+        _context.Dogs.Add(dog);
+        _context.SaveChanges();
 
-        public Dog? GetByUserId(int id)
-        {
-            throw new NotImplementedException();
-        }
+        return dog.Id;
+    }
 
-        public void RemoveById(int id)
-        {
-            throw new NotImplementedException();
-        }
+    public List<Dog> GetAll() => _context.Dogs.Where(d => !d.IsDeleted).ToList();
 
-        public void UpdateById(Dog dog, int id)
-        {
-            throw new NotImplementedException();
-        }
+    public Dog? GetById(int id) => _context.Dogs.Where(d => !d.IsDeleted).FirstOrDefault(d => d.Id == id);
+
+    public List<Dog>? GetByOwnerId(int id) => _context.Dogs.Where(d => d.Owner.Id == id && !d.IsDeleted).ToList();
+
+
+    public void RemoveById(int id)
+    {
+        var dog = _context.Dogs.FirstOrDefault(d => d.Id == id);
+        dog.IsDeleted = true;
+        _context.SaveChanges();
+    }
+
+    public void UpdateById(Dog updateDog, int id)
+    {
+        var dog = _context.Dogs.FirstOrDefault(d => d.Id == id);
+        dog = updateDog;
+        _context.Dogs.Update(dog);
+        _context.SaveChanges();
     }
 }

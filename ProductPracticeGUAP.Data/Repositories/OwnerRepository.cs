@@ -7,28 +7,37 @@ namespace ProductPracticeGUAP.Data.Repositories;
 
 public class OwnerRepository : IOwnerRepository
 {
+    private readonly ProductPracticeGUAPContext _context;
+
+    public OwnerRepository(ProductPracticeGUAPContext context)
+    {
+        _context = context;
+    }
+
     public int Add(Owner owner)
     {
-        throw new NotImplementedException();
+        _context.Owners.Add(owner);
+        _context.SaveChanges();
+
+        return owner.Id;
     }
 
-    public List<Owner> GetAll()
-    {
-        throw new NotImplementedException();
-    }
+    public List<Owner> GetAll() => _context.Owners.Where(o => !o.IsDeleted).ToList();
 
-    public Owner? GetByUserId(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public Owner? GetById(int id) => _context.Owners.Where(o => !o.IsDeleted).FirstOrDefault(o => o.Id == id);
 
     public void RemoveById(int id)
     {
-        throw new NotImplementedException();
+        var owner = _context.Owners.FirstOrDefault(o => o.Id == id);
+        owner.IsDeleted = true;
+        _context.SaveChanges();
     }
 
-    public void UpdateById(Owner dog, int id)
+    public void UpdateById(Owner updateOwner, int id)
     {
-        throw new NotImplementedException();
+        var owner = _context.Owners.FirstOrDefault(d => d.Id == id);
+        owner = updateOwner;
+        _context.Owners.Update(owner);
+        _context.SaveChanges();
     }
 }

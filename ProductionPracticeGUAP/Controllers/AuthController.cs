@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using ProductionPracticeGUAP.API.Enums;
+using ProductionPracticeGUAP.Data.Enums;
 using ProductionPracticeGUAP.API.Infrastructure;
 using ProductionPracticeGUAP.API.Models.Requests;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,7 +16,7 @@ public class AuthController : Controller
     public string Login([FromBody] OwnerLoginRequest request)
     {
         if (request == default || request.Email == default) return string.Empty;
-        var roleClaim = new Claim(ClaimTypes.Role, (request.Email == "q@qq.qq" ? RoleEnum.Admin : RoleEnum.Owner).ToString());
+        var roleClaim = new Claim(ClaimTypes.Role, (request.Email.Contains("admin@a.ad") ? RoleEnum.Admin : RoleEnum.Owner).ToString());
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, request.Email), roleClaim };
         var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
