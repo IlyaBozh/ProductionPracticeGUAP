@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductionPracticeGUAP.API.Extentions;
+using ProductionPracticeGUAP.API.Infrastructure;
 using ProductionPracticeGUAP.API.Models;
+using ProductionPracticeGUAP.Data.Enums;
 using ProductPracticeGUAP.Data.Entities;
 using ProductPracticeGUAP.Data.Repositories.Interfaces;
 
@@ -17,6 +19,7 @@ public class OwnersController : Controller
         _ownerRepository = ownerRepository;
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
@@ -35,6 +38,7 @@ public class OwnersController : Controller
         return Created($"{this.GetUri()}/{result}", result);
     }
 
+    [AuthorizeByRole]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -47,6 +51,7 @@ public class OwnersController : Controller
         return Ok();
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -63,6 +68,7 @@ public class OwnersController : Controller
         return NoContent();
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(OwnerOutPutResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -77,6 +83,7 @@ public class OwnersController : Controller
             return NotFound();
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpGet]
     [ProducesResponseType(typeof(List<OwnerOutPutAllResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]

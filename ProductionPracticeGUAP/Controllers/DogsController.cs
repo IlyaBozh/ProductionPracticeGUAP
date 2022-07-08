@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductionPracticeGUAP.API.Extentions;
+using ProductionPracticeGUAP.API.Infrastructure;
 using ProductionPracticeGUAP.API.Models;
+using ProductionPracticeGUAP.Data.Enums;
 using ProductPracticeGUAP.Data.Entities;
 using ProductPracticeGUAP.Data.Repositories.Interfaces;
 
@@ -19,6 +21,7 @@ public class DogsController : Controller
         _ownerRepository = ownerRepository;
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpPost]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(void), StatusCodes.Status422UnprocessableEntity)]
@@ -40,6 +43,7 @@ public class DogsController : Controller
         return Created($"{this.GetUri()}/{result}", result);
     }
 
+    [AuthorizeByRole]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -52,6 +56,7 @@ public class DogsController : Controller
         return NoContent();
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -71,6 +76,7 @@ public class DogsController : Controller
         return NoContent();
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(DogOutPutResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -85,6 +91,7 @@ public class DogsController : Controller
             return NotFound();
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpGet("{id}/owner")]
     [ProducesResponseType(typeof(DogOutPutAllResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
@@ -99,6 +106,7 @@ public class DogsController : Controller
             return NotFound();
     }
 
+    [AuthorizeByRole(RoleEnum.Owner)]
     [HttpGet]
     [ProducesResponseType(typeof(List<DogOutPutAllResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]

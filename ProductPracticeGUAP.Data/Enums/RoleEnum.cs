@@ -1,4 +1,4 @@
-﻿namespace ProductionPracticeGUAP.API.Enums
+﻿namespace ProductionPracticeGUAP.Data.Enums
 {
     public enum RoleEnum
     {
